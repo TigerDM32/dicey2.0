@@ -54,7 +54,8 @@ using namespace dicey2;
 
     // Computes and returns the char * representation of entire packet.
     char * Packet::getPacketAsCharArray(){
-        //FORMAT - [SEQ_NO, ACK, CHECKSUM0, CHECKSUM1, CHECKSUM2, CHECKSUM3, DATA0, ..., DATA122]
+        //FORMAT - [SEQ_NO0, SEQ_NO1, ACK/NAK, CHECKSUM0, ..., CHECKSUM 15, DATA0, ..., DATA493] -- CHARACTERS/BYTES
+        //FORMAT - [0      , 1      , 2      , 3  ..........., 18         , 19, ......, 511] -- ARRAY INDEXES
         char * wholePacket = new char[PACKET_SIZE];
 
         // Assign sequence number
