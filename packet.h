@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
+#include <stdint.h>
 
 #define PACKET_SIZE 512
 #define PACKET_DATA_SIZE 507
