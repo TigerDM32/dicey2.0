@@ -62,8 +62,6 @@ int main(int argc, char* argv[]) {
   				int filesize = dataFile.tellg();
   				dataFile.seekg(0, dataFile.beg);
 
-
-
 				//is file 80KB or more? if not, send error
 				if(filesize <= 80000){
 					dataFile.close();
@@ -91,12 +89,17 @@ int main(int argc, char* argv[]) {
 					std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
 					fileBuffer[i] = filePkt;
 				}
+              
+                for (int i = 0; i < numPackets; i++) {
+                    
+                    if (i%32 == 16 || i%32 == 0) {
+                        std::cout << "ACK RECEIVED. SENDING NEXT WINDOW." << std::endl;
+                    }
+                }
 			}
-            // TODO: close data file.		
+            dataFile.close();		
 		}
 	}
-  
-    // TODO: send each packet in fileBuffer to the client.
 
 	return 0;
 }
