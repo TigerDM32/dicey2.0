@@ -23,6 +23,15 @@ int main(int argc, char* argv[]) {
 		perror("Unable to send GET request.");
 		return 0;
 	}
+
+	bit pktRcvd = 0;
+	while(!pktRcvd){
+		if(rcvPacket())
+			pktRcvd = 1;
+	}
+
+
+
 	return 0;
 }
 
@@ -69,4 +78,41 @@ bool dicey2::sendMessage(char * messageArray){
 		return 0;
 	}
 	return 1;
+}
+
+bool dicey2::rcvPacket(){
+	int rcvPoll = 0;
+	struct pollfd ufds;
+	time_t timer;
+
+	ufds.fd = skt;
+	ufds.events = POLLIN;
+	rcvPoll = poll(&ufds, 1, 20);
+
+	if( rcvPoll == -1 ) {
+		perror("Unable to poll socket.");
+		return 0; 
+	} 
+	else if( rcvPoll == 0 ) {
+		perror("Timeout");
+		return 0;
+	} 
+	else {
+		int recvLen;
+		recvLen = recvfrom(skt, buffer, PACKET_SIZE, 0, (struct sockaddr *)&srvaddr, &srvaddrLen);
+		if (recvLen > 0){
+			Packet* srvPkt = new Packet;                 
+			buffer[recvLen] = 0;
+			memcpy(srvPkt, buffer, PACKET_SIZE);
+			char * pktData = srvPkt->getData();
+			char * sampleData = new char[48];
+					for (int k = 0; k < 48; k++){
+						sampleData[k] = pktData[k];
+					}
+			std::cout << std::endl << std::endl << "Received Packet: seq_num = " << srvPkt->getSeqNum() << "; ack = " << srvPkt->getAck() << "; checksum = " << srvPkt->getChecksum() << "; data = " << sampleData << "; recvLen = " << recvLen << std::endl;
+			if (recvLen < PACKET_DATA_SIZE)
+				return 1;
+		} 
+	}
+	return 0;
 }

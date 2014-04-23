@@ -86,6 +86,7 @@ int main(int argc, char* argv[]) {
 					}
 					std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
 					fileBuffer[i] = filePkt;
+					sendPacket(fileBuffer[i]);
 				}
               
                 for (int i = 0; i < numPackets; i++) {
