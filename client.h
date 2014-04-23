@@ -33,10 +33,6 @@ namespace dicey2 {
 	socklen_t srvaddrLen = sizeof(srvaddr);
 	struct hostent *h;
 	unsigned char buffer[BUFFER_SIZE];
-	bool abp = true;
-	int corrupted = 0;
-	int lost = 0;
-	int passed = 0;
 
     bool openSocket();
     bool sendPacket(Packet myPkt);
