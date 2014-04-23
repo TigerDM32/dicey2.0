@@ -14,9 +14,9 @@
 
 #include "packet.h"
 
-#define PORT_NO 10022
+#define PORT_NO 10023
 #define PACKET_SIZE 512
-#define PACKET_DATA_SIZE 493
+#define PACKET_DATA_SIZE 507
 #define BUFFER_SIZE 2048
 
 namespace dicey2 {
@@ -40,6 +40,7 @@ namespace dicey2 {
 
     bool openSocket();
     bool sendPacket(Packet myPkt);
+    bool sendMessage(char * messageArray);
     bool rcvPacket();
     void gremlin(Packet gremPkt);
 }

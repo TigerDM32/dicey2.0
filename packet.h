@@ -6,7 +6,7 @@
 #include <cstdio>
 
 #define PACKET_SIZE 512
-#define PACKET_DATA_SIZE 493
+#define PACKET_DATA_SIZE 507
 
 typedef bool bit;
 
