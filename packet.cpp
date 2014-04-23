@@ -58,8 +58,8 @@ using namespace dicey2;
 
     // Computes and returns the char * representation of entire packet.
     char * Packet::getPacketAsCharArray(){
-        //FORMAT - [SEQ_NO0, SEQ_NO1, ACK/NAK, CHECKSUM0, ..., CHECKSUM 15, DATA0, ..., DATA492] -- CHARACTERS/BYTES
-        //FORMAT - [0      , 1      , 2      , 3  ..........., 18         , 19, ......, 511] -- ARRAY INDEXES
+        //FORMAT - [SEQ_NO0, SEQ_NO1, ACK/NAK, CHECKSUM0, CHECKSUM1, DATA0, ..., DATA506] -- CHARACTERS/BYTES
+        //FORMAT - [0      , 1      , 2      , 3        , 4        , 5    , ..., 511] -- ARRAY INDEXES
         char * wholePacket = new char[PACKET_SIZE];
 
         // Assign sequence number
@@ -71,15 +71,15 @@ using namespace dicey2;
 
         // Assign ACK/NAK
         if(ack)
-            wholePacket[1] = '1';
+            wholePacket[2] = '1';
         else
-            wholePacket[1] = '0';
+            wholePacket[2] = '0';
         //std::cout << "DEBUG (Packet getPacketAsCharArray): wholePacket[1] = " << wholePacket[1] << std::endl;
 
         // Assign checksum
         char * strCh = new char[sizeof(int)];
         sprintf(strCh, "%16d", checksum);
-        for(int i = 3; i < 19; i++){
+        for(int i = 3; i < 5; i++){
             if (strCh[i - 3] == ' '){
                 wholePacket[i] = '0';
                 continue;
@@ -89,8 +89,8 @@ using namespace dicey2;
         //std::cout << "DEBUG (Packet getPacketAsCharArray): strCh = " << strCh << std::endl;
 
         // Assign data
-        for(int j = 19; j < PACKET_SIZE; j++){
-            wholePacket[j] = data[j - 19];
+        for(int j = 5; j < PACKET_SIZE; j++){
+            wholePacket[j] = data[j - 5];
         }
         //std::cout << "DEBUG (Packet getPacketAsCharArray): wholePacket = " << wholePacket << std::endl;
 
