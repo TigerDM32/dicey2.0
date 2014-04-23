@@ -78,7 +78,7 @@ using namespace dicey2;
 
         // Assign checksum
         char * strCh = new char[sizeof(int)];
-        sprintf(strCh, "%16d", checksum);
+        sprintf(strCh, "%2d", checksum);
         for(int i = 3; i < 5; i++){
             if (strCh[i - 3] == ' '){
                 wholePacket[i] = '0';

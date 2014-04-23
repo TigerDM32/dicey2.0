@@ -12,7 +12,7 @@
 
 #include "packet.h"
 
-#define PORT_NO 10023
+#define PORT_NO 10022
 #define PACKET_SIZE 512
 #define PACKET_DATA_SIZE 507
 #define WINDOW_SIZE 16

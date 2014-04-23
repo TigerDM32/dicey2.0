@@ -45,13 +45,27 @@ int main(int argc, char* argv[]) {
 				//is file 80KB or more? if not, send error
 				if(filesize <= 80000){
 					dataFile.close();
-					perror("File is too small.");
+					cout << "ERROR: File is too small.");
 					return 0;
 				}
 
-				//calculate how many times to pull out 122 bytes
+				//calculate how many times to pull out 507 bytes
 				int numPackets = 1 + ((filesize - 1)/PACKET_DATA_SIZE);
+
 				std::cout << "File size: " << filesize << ", packets to send = " << numPackets << std::endl;
+
+				//create a buffer of packets that comprise the entire file to send
+				Packet * fileBuffer = new Packet[numPackets];
+				
+				int seqNo = -1;
+				for (int i = 0; i < numPackets; i++){
+					char * pktData= new char[PACKET_DATA_SIZE];
+					dataFile.read(pktData, PACKET_DATA_SIZE);
+
+					Packet filePkt((seqNo +1)%32,  pktData);
+					std::cout << std::endl << std::endl << "Packet: seq_num = " << myPkt.getSeqNum() << "; ack = " << myPkt.getAck() << "; checksum = " << myPkt.getChecksum() << "; data = " << myPkt.getData() << std::endl;
+					fileBuffer[i] = filePkt;
+				}
 			}
 			
 		}
