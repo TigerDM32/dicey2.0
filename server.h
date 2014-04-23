@@ -1,16 +1,13 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream>
-#include <fstream>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
-#include <cstring>
-#include <sys/poll.h>
+#include <string.h>
+#include <iostream>
+#include <fstream>
 
 #include "packet.h"
 

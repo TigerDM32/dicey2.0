@@ -1,13 +1,16 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <string.h>
 #include <iostream>
 #include <fstream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <cstring>
+#include <sys/poll.h>
 
 #include "packet.h"
 
