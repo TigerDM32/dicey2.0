@@ -19,7 +19,7 @@ namespace dicey2{
 			char data[PACKET_SIZE];
 
 		public:
-			Packet(int seq_num, char data[PACKET_SIZE]);
+			Packet(int seq_num = 0, char data[PACKET_SIZE] = new char[PACKET_SIZE]);
 
 			int generate_checksum();
 
