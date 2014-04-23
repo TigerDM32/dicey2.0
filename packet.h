@@ -6,7 +6,7 @@
 #include <cstdio>
 
 #define PACKET_SIZE 512
-#define PACKET_DATA_SIZE 122
+#define PACKET_DATA_SIZE 493
 
 typedef bool bit;
 
@@ -32,8 +32,7 @@ namespace dicey2{
 			char * getPacketAsCharArray();
 			void setAck(char ackBit);
 			void setChecksum(int newChecksum);
-
-
+			void setSeqNum(int newSeqNum);
 	};
 }
 

@@ -32,6 +32,10 @@ using namespace dicey2;
             ack = 1;
     }
 
+    void Packet::setSeqNum(int newSeqNum){
+    	seq_num = newSeqNum;
+    }
+
     int Packet::getSeqNum(){
         return seq_num;
     }
@@ -54,15 +58,15 @@ using namespace dicey2;
 
     // Computes and returns the char * representation of entire packet.
     char * Packet::getPacketAsCharArray(){
-        //FORMAT - [SEQ_NO0, SEQ_NO1, ACK/NAK, CHECKSUM0, ..., CHECKSUM 15, DATA0, ..., DATA493] -- CHARACTERS/BYTES
+        //FORMAT - [SEQ_NO0, SEQ_NO1, ACK/NAK, CHECKSUM0, ..., CHECKSUM 15, DATA0, ..., DATA492] -- CHARACTERS/BYTES
         //FORMAT - [0      , 1      , 2      , 3  ..........., 18         , 19, ......, 511] -- ARRAY INDEXES
         char * wholePacket = new char[PACKET_SIZE];
 
         // Assign sequence number
         if(seq_num)
-            wholePacket[0] = '1';
+            wholePacket[0] = seq_num/10;
         else
-            wholePacket[0] = '0';
+            wholePacket[1] = seq_num%10;
         //std::cout << "DEBUG (Packet getPacketAsCharArray): wholePacket[0] = " << wholePacket[0] << std::endl;
 
         // Assign ACK/NAK
@@ -74,19 +78,19 @@ using namespace dicey2;
 
         // Assign checksum
         char * strCh = new char[sizeof(int)];
-        sprintf(strCh, "%4d", checksum);
-        for(int i = 2; i < 6; i++){
-            if (strCh[i - 2] == ' '){
+        sprintf(strCh, "%16d", checksum);
+        for(int i = 3; i < 19; i++){
+            if (strCh[i - 3] == ' '){
                 wholePacket[i] = '0';
                 continue;
             }
-            wholePacket[i] = strCh[i - 2];
+            wholePacket[i] = strCh[i - 3];
         }
         //std::cout << "DEBUG (Packet getPacketAsCharArray): strCh = " << strCh << std::endl;
 
         // Assign data
-        for(int j = 6; j < PACKET_SIZE; j++){
-            wholePacket[j] = data[j - 6];
+        for(int j = 19; j < PACKET_SIZE; j++){
+            wholePacket[j] = data[j - 19];
         }
         //std::cout << "DEBUG (Packet getPacketAsCharArray): wholePacket = " << wholePacket << std::endl;
 

@@ -11,7 +11,7 @@
 
 #define PORT_NO 10022
 #define PACKET_SIZE 512
-#define PACKET_DATA_SIZE 122
+#define PACKET_DATA_SIZE 493
 #define BUFFER_SIZE 2048
 
 namespace dicey2 {
