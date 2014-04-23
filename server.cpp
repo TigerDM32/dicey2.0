@@ -11,14 +11,12 @@ bool dicey2::sendMessage(char * messageArray){
 }
 
 bool dicey2::sendPacket(Packet myPkt){
-	char * packetAsArray = myPkt.getPacketAsCharArray();
-	if (!sendMessage(packetAsArray))
-	{
-		std::cout << std::endl << std::endl << "Sending Packet: seq_num = " << myPkt.getSeqNum() << "; ack = " << myPkt.getAck() << "; checksum = " << myPkt.getChecksum() << "; data = " << myPkt.getData() << std::endl;
+	if(sendto(skt, &myPkt, PACKET_SIZE, 0, (struct sockaddr *)&addr2, sizeof(addr2)) < 0){
+		perror("Unable to send message.");
 		return 0;
 	}
-	else
-		return 1;
+	std::cout << std::endl << std::endl << "Sending Packet: seq_num = " << myPkt.getSeqNum() << "; ack = " << myPkt.getAck() << "; checksum = " << myPkt.getChecksum() << "; data = " << myPkt.getData() << std::endl;
+	return 1;
 }
 
 int main(int argc, char* argv[]) {
