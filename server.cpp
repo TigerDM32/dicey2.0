@@ -63,8 +63,8 @@ int main(int argc, char* argv[]) {
 
 					Packet filePkt(i%32,  pktData);
 					char * sampleData = new char[48];
-					for (int i = 0; i < 48; i++){
-						sampleData[i] = pktData[i];
+					for (int j = 0; j < 48; j++){
+						sampleData[j] = pktData[j];
 					}
 					std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = " << sampleData << std::endl;
 					fileBuffer[i] = filePkt;
