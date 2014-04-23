@@ -2,6 +2,25 @@
 
 using namespace dicey2;
 
+bool dicey2::sendMessage(char * messageArray){
+	if(sendto(skt, messageArray, strlen(messageArray), 0, (struct sockaddr *)&addr2, sizeof(addr2)) < 0){
+		perror("Unable to send message.");
+		return 0;
+	}
+	return 1;
+}
+
+bool dicey2::sendPacket(Packet myPkt){
+	char * packetAsArray = myPkt.getPacketAsCharArray();
+	if (!sendMessage(packetAsArray))
+	{
+		std::cout << std::endl << std::endl << "Sending Packet: seq_num = " << myPkt.getSeqNum() << "; ack = " << myPkt.getAck() << "; checksum = " << myPkt.getChecksum() << "; data = " << myPkt.getData() << std::endl;
+		return 0;
+	}
+	else
+		return 1;
+}
+
 int main(int argc, char* argv[]) {
 	if((skt = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
 		perror("Unable to create socket.");
