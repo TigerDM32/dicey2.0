@@ -15,23 +15,23 @@ namespace dicey2{
 		private:
 			int seq_num;
 			bit ack;
-			int checksum;
+			uint16_t checksum;
 			char data[PACKET_SIZE];
 
 		public:
 			Packet(int seq_num = 0, char data[PACKET_SIZE] = new char[PACKET_SIZE]);
 
-			int generate_checksum();
+			uint16_t generate_checksum();
 
 			bool test_checksum();
 
 			int getSeqNum();
 			bit getAck();
-			int getChecksum();
+			uint16_t getChecksum();
 			char * getData();
 			char * getPacketAsCharArray();
 			void setAck(char ackBit);
-			void setChecksum(int newChecksum);
+			void setChecksum(uint16_t newChecksum);
 			void setSeqNum(int newSeqNum);
 	};
 }
