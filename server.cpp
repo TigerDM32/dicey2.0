@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 				}
               
                 for (int i = 0; i < numPackets; i++) {
-                    
+                    sendPacket(fileBuffer[i]);
                     if (i%32 == 16 || i%32 == 0) {
                         std::cout << "ACK RECEIVED. SENDING NEXT WINDOW." << std::endl;
                     }
