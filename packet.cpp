@@ -9,14 +9,13 @@ using namespace dicey2;
 		checksum = generate_checksum();
 	}
 
-	int Packet::generate_checksum() {
-        int byteTotal = 0;
+	uint16_t Packet::generate_checksum() {
+        uint16_t byteTotal = 0;
         for(int i = 0; i < strlen(data); i++){
             byteTotal += data[i];
         }
-        int divisor = byteTotal/256;
-        checksum = byteTotal - (divisor * 256);
-        return checksum;
+        byteTotal = -byteTotal;
+        return byteTotal;
     }
 
     bool Packet::test_checksum() {
@@ -43,11 +42,11 @@ using namespace dicey2;
         return ack;
     }
 
-    void Packet::setChecksum(int newChecksum){
+    void Packet::setChecksum(uint16_t newChecksum){
         checksum = newChecksum;
     }
 
-    int Packet::getChecksum(){
+    uint16_t Packet::getChecksum(){
         return checksum;
     }
 
