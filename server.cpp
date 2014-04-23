@@ -34,10 +34,8 @@ int main(int argc, char* argv[]) {
 			std::cout << "Received request: " << requestData << ", filename = " << filename << std::endl;
 		
 			//attempt to open file
-			//std::ifstream dataFile (filename, std::ifstream::binary);
 			std::ifstream dataFile;
 			dataFile.open(filename);
-			bit isEOF = false;
 			if(dataFile.is_open()){
 			
 				//get filesize
@@ -64,17 +62,14 @@ int main(int argc, char* argv[]) {
 				
 				for (int i = 0; i < numPackets; i++){
 					char * pktData= new char[PACKET_DATA_SIZE];
-					//dataFile.read(pktData, PACKET_DATA_SIZE);
-					for (int j = 0; j < PACKET_DATA_SIZE; j++){
-						pktData[j] = dataFile.get();
-					}
+					dataFile.read(pktData, PACKET_DATA_SIZE);
 
 					Packet filePkt(i%32,  pktData);
 					char * sampleData = new char[48];
 					for (int k = 0; k < 48; k++){
 						sampleData[k] = pktData[k];
 					}
-					std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = " << sampleData << std::endl;
+					std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
 					fileBuffer[i] = filePkt;
 				}
 			}

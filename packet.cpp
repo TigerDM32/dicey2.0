@@ -13,7 +13,6 @@ using namespace dicey2;
         int byteTotal = 0;
         for(int i = 0; i < strlen(data); i++){
             byteTotal += data[i];
-            std::cout << data[i];
         }
         int divisor = byteTotal/256;
         checksum = byteTotal - (divisor * 256);
