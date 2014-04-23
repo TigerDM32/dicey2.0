@@ -57,12 +57,11 @@ int main(int argc, char* argv[]) {
 				//create a buffer of packets that comprise the entire file to send
 				Packet * fileBuffer = new Packet[numPackets];
 				
-				int seqNo = -1;
 				for (int i = 0; i < numPackets; i++){
 					char * pktData= new char[PACKET_DATA_SIZE];
 					dataFile.read(pktData, PACKET_DATA_SIZE);
 
-					Packet filePkt((seqNo +1)%32,  pktData);
+					Packet filePkt(i%32,  pktData);
 					std::cout << std::endl << std::endl << "Packet: seq_num = " << myPkt.getSeqNum() << "; ack = " << myPkt.getAck() << "; checksum = " << myPkt.getChecksum() << "; data = " << myPkt.getData() << std::endl;
 					fileBuffer[i] = filePkt;
 				}
