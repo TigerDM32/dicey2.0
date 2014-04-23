@@ -73,9 +73,11 @@ int main(int argc, char* argv[]) {
 					fileBuffer[i] = filePkt;
 				}
 			}
-			
+            // TODO: close data file.		
 		}
 	}
+  
+    // TODO: send each packet in fileBuffer to the client.
 
 	return 0;
 }

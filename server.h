@@ -25,6 +25,9 @@ namespace dicey2 {
 	int skt;
 	int expectedSeq = 0;
 	unsigned char buffer[PACKET_DATA_SIZE];
+  
+    bool sendPacket(Packet myPkt);
+    bool sendMessage(char * messageArray);
 }
 
 #endif
