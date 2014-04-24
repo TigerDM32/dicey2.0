@@ -89,11 +89,8 @@ int main(int argc, char* argv[]) {
                     }
                   
 					Packet filePkt(i%32,  pktData);
-					char * sampleData = new char[48];
-					for (int k = 0; k < 48; k++){
-						sampleData[k] = pktData[k];
-					}
-					//std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
+					
+					
 					fileBuffer[i] = filePkt;
 				}
               
@@ -103,8 +100,15 @@ int main(int argc, char* argv[]) {
 
 				while (ackCount < numPackets){
 					
+					Packet printPkt = fileBuffer[ackCount];
 					//pthread_create()
-					sendPacket(fileBuffer[ackCount]);
+					char * pktData = printPkt.getData();
+					sendPacket(printPkt);
+					char * sampleData = new char[48];
+					for (int k = 0; k < 48; k++){
+						sampleData[k] = pktData[k];
+					}
+					std::cout << std::endl << std::endl << "Packet: seq_num = " << printPkt.getSeqNum() << "; ack = " << printPkt.getAck() << "; checksum = " << printPkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
 					ackCount++;
 				}
 
