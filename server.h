@@ -9,6 +9,7 @@
 #include <string.h>
 #include <iostream>
 #include <fstream>
+#include <sys/poll.h>
 
 #include "packet.h"
 
@@ -32,6 +33,7 @@ namespace dicey2 {
   
     bool sendPacket(Packet myPkt);
     bool sendMessage(char * messageArray);
+    bool rcvAck(int expectSeq);
 }
 
 #endif

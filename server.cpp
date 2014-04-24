@@ -84,7 +84,6 @@ int main(int argc, char* argv[]) {
 					dataFile.read(pktData, PACKET_DATA_SIZE);
 
                     if (i == numPackets - 1) { // this is the last packet
-                      std::cout << "Packet #" << i + 1 << " out of " << numPackets << std::endl;
                       pktData[506] = '\0';
                     }
                   
@@ -93,29 +92,51 @@ int main(int argc, char* argv[]) {
 					
 					fileBuffer[i] = filePkt;
 				}
-              
-				//acks we have already received
-				int ackCount = 0;
-				int base = 0;
+              	
 
-				while (ackCount < numPackets){
-					
-					Packet printPkt = fileBuffer[ackCount];
-					//pthread_create()
-					char * pktData = printPkt.getData();
-					sendPacket(printPkt);
-					char * sampleData = new char[48];
-					for (int k = 0; k < 48; k++){
-						sampleData[k] = pktData[k];
+				int currentSeqNum = 0;
+				while(currentSeqNum < numPackets) {
+					//bool itworked = rcvAck(currentSeqNum);
+					//if (itworked) {
+						//std::cout << "it worked" << std::endl;
+						//currentSeqNum++;
+					//}
+					for (int j = 0; j < 16; j++) {
+						Packet printPkt = fileBuffer[currentSeqNum + j];
+							char * pktData = printPkt.getData();
+							sendPacket(printPkt);
+							char * sampleData = new char[48];
+							for (int k = 0; k < 48; k++){
+								sampleData[k] = pktData[k];
+							}
+							std::cout << std::endl << std::endl << "Packet: seq_num = " << printPkt.getSeqNum() << "; ack = " << printPkt.getAck() << "; checksum = " << printPkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
 					}
-					std::cout << std::endl << std::endl << "Packet: seq_num = " << printPkt.getSeqNum() << "; ack = " << printPkt.getAck() << "; checksum = " << printPkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
-					ackCount++;
+					currentSeqNum++;
 				}
 
-                //send first window
-                for (int i = 0; i < WINDOW_SIZE; i++){
 
-                }
+				//acks we have already received
+				//int ackCount = 0;
+				//int base = 0;
+
+				//while (ackCount < numPackets/16){
+					
+					//while (!rcvAck(base)){
+                		//for (int j = base; j < base + 16; j++){
+                			//Packet printPkt = fileBuffer[ackCount];
+							//char * pktData = printPkt.getData();
+							//sendPacket(printPkt);
+							//char * sampleData = new char[48];
+							//for (int k = 0; k < 48; k++){
+								//sampleData[k] = pktData[k];
+							//}
+							//std::cout << std::endl << std::endl << "Packet: seq_num = " << printPkt.getSeqNum() << "; ack = " << printPkt.getAck() << "; checksum = " << printPkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
+                		//}
+                	//}
+					
+					//ackCount++;
+					//base += 16;
+				//}
 
 
                 //for (int i = 0; i < numPackets; i++) {
@@ -129,5 +150,44 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
+	return 0;
+}
+
+bool dicey2::rcvAck(int expectSeq){
+	int rcvPoll = 0;
+	struct pollfd ufds;
+	time_t timer;
+
+	ufds.fd = skt;
+	ufds.events = POLLIN;
+	rcvPoll = poll(&ufds, 1, 20);
+
+	if( rcvPoll == -1 ) {
+		perror("Unable to poll socket.");
+		return 0; 
+	} 
+	else if( rcvPoll == 0 ) {
+		perror("Timeout");
+		return 0;
+	} 
+	else {
+		int recvLen;
+		recvLen = recvfrom(skt, buffer, PACKET_SIZE, 0, (struct sockaddr *)&addr2, &addr2Len);
+		if (recvLen > 1){
+			Packet* ackPkt = new Packet;                 
+			buffer[recvLen] = 0;
+			memcpy(ackPkt, buffer, PACKET_SIZE);
+			
+			if (ackPkt->getSeqNum() == expectSeq && ackPkt->getAck() == 1){
+				std::cout << std::endl << std::endl << "Received ACK: seq_num = " << expectSeq << "; ack = " << ackPkt->getAck() << std::endl;
+				return 1;
+			}
+			else
+				return 0;
+			
+			//if (pktData[PACKET_DATA_SIZE] == char(0))
+			//	return 1;
+		}
+	}
 	return 0;
 }
