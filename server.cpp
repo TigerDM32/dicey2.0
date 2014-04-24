@@ -15,11 +15,16 @@ bool dicey2::sendPacket(Packet myPkt){
 		perror("Unable to send message.");
 		return 0;
 	}
-	std::cout << std::endl << std::endl << "Sending Packet: seq_num = " << myPkt.getSeqNum() << "; ack = " << myPkt.getAck() << "; checksum = " << myPkt.getChecksum() << "; data = " << myPkt.getData() << std::endl;
 	return 1;
 }
 
 int main(int argc, char* argv[]) {
+	dicey2::client_ip_address = argc > 1 ? argv[1] : "127.0.0.1";//"131.204.14.205";
+    dicey2::prob_corrupt = argc > 2 ? std::atof(argv[2]) : 0.2;
+    dicey2::prob_loss = argc > 3 ? std::atof(argv[3]) : 0.2;
+    dicey2::prob_delay = argc > 4 ? std::atof(argv[4]) : 0.3;
+    dicey2::length_delay = argc > 5 ? std::atof(argv[5]) : 4;
+	
 	if((skt = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
 		perror("Unable to create socket.");
 		return 0;
@@ -84,9 +89,8 @@ int main(int argc, char* argv[]) {
 					for (int k = 0; k < 48; k++){
 						sampleData[k] = pktData[k];
 					}
-					std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
+					//std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
 					fileBuffer[i] = filePkt;
-					sendPacket(fileBuffer[i]);
 				}
               
                 for (int i = 0; i < numPackets; i++) {

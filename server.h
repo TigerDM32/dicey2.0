@@ -18,6 +18,11 @@
 #define WINDOW_SIZE 16
 
 namespace dicey2 {
+	std::string client_ip_address;
+    double prob_loss;
+    double prob_corrupt;
+    double prob_delay;
+    int length_delay;
 	struct sockaddr_in addr1;
 	struct sockaddr_in addr2;
 	socklen_t addr2Len = sizeof(addr2);

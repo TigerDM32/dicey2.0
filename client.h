@@ -21,10 +21,6 @@
 
 namespace dicey2 {
 	std::string srv_ip_address;
-    double prob_loss;
-    double prob_corrupt;
-    double prob_delay;
-    int length_delay;
     std::string filename;
     int skt;
     struct timeval timeout; 
@@ -32,7 +28,7 @@ namespace dicey2 {
 	struct sockaddr_in srvaddr;
 	socklen_t srvaddrLen = sizeof(srvaddr);
 	struct hostent *h;
-	unsigned char buffer[BUFFER_SIZE];
+	unsigned char buffer[PACKET_SIZE];
 
     bool openSocket();
     bool sendPacket(Packet myPkt);
