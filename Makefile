@@ -16,6 +16,4 @@ packet.o: packet.h packet.cpp
 all: client server packet.o
 
 clean:
-	rm -Rf *.o client
-	rm -Rf *.o server
-	rm -Rf *.o
+	rm -Rf *.o client server output.txt
