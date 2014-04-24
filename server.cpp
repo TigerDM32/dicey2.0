@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 					dataFile.read(pktData, PACKET_DATA_SIZE);
 
                     if (i == numPackets - 1) { // this is the last packet
-                      std::cout << "Packet #" << i + 1 << " out of " << numPackets << std::endl;
+                      //std::cout << "Packet #" << i + 1 << " out of " << numPackets << std::endl;
                       pktData[506] = '\0';
                     }
                   
