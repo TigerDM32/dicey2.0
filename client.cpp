@@ -21,12 +21,22 @@ int main(int argc, char* argv[]) {
 	}
 
 	bit pktRcvd = 0;
-	while(!pktRcvd){
-		if(rcvPacket())
-			pktRcvd = 1;
+    int expectedSeqNum = 0;
+    int prevSeqNum = -1;
+    int timeouts = 0;
+	while(!pktRcvd) {
+		if (rcvPacket(expectedSeqNum)) {
+			expectedSeqNum++; // expect the next packet.
+        } else {
+          if (expectedSeqNum == prevSeqNum) {
+            timeouts++;
+          }
+        }
+        if (timeouts >= 3) {
+          break;
+        }
+        prevSeqNum = expectedSeqNum;      
 	}
-
-
 
 	return 0;
 }
@@ -82,7 +92,7 @@ bool dicey2::writeFile(char * fileData) {
   return 1;
 }
 
-bool dicey2::rcvPacket(){
+bool dicey2::rcvPacket(int expectedSeqNum){
 	int rcvPoll = 0;
 	struct pollfd ufds;
 	time_t timer;
@@ -111,12 +121,32 @@ bool dicey2::rcvPacket(){
 					for (int k = 0; k < 48; k++){
 						sampleData[k] = pktData[k];
 					}
-			std::cout << std::endl << std::endl << "Received Packet: seq_num = " << srvPkt->getSeqNum() << "; ack = " << srvPkt->getAck() << "; checksum = " << srvPkt->getChecksum() << "; data = " << sampleData << "; recvLen = " << recvLen << std::endl;
+			// std::cout << std::endl << std::endl << "Received Packet: seq_num = " << srvPkt->getSeqNum() << "; ack = " << srvPkt->getAck() << "; checksum = " << srvPkt->getChecksum() << "; data = " << sampleData << "; recvLen = " << recvLen << std::endl;
+            std::cout << "Wanting the #" << expectedSeqNum << " packet. Expected sequence #" << expectedSeqNum % 32 << ". Received sequence #" << srvPkt->getSeqNum() << "." << std::endl;
           
-            writeFile(pktData);
+            // sequence number and checksum are correct.
+            if (srvPkt->getSeqNum() == (expectedSeqNum % 32)) {
+              std::cout << "Sending ack." << std::endl;
+              Packet * ack = new Packet;
+              ack->setSeqNum(expectedSeqNum % 32);
+              ack->setAck('1');
+              dicey2::sendPacket(*ack);
               
-			if (recvLen < PACKET_DATA_SIZE)
-				return 1;
+              writeFile(pktData); // add packet's data to file
+              std::cout << "Ack sent." << std::endl;
+              
+              return 1;
+              
+            // here be dragons.
+            } else {
+              std::cout << "Sending nak." << std::endl;
+              Packet * nak = new Packet;
+              nak->setSeqNum(expectedSeqNum % 32);
+              nak->setAck('0');
+              dicey2::sendPacket(*nak);
+              
+              return 0;
+            }
 		} 
 	}
 	return 0;

@@ -34,7 +34,7 @@ namespace dicey2 {
     bool sendPacket(Packet myPkt);
     bool sendMessage(char * messageArray);
     bool writeFile(char * fileData);
-    bool rcvPacket();
+    bool rcvPacket(int expectedSeqNum);
     void gremlin(Packet gremPkt);
 }
 
