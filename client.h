@@ -33,6 +33,7 @@ namespace dicey2 {
     bool openSocket();
     bool sendPacket(Packet myPkt);
     bool sendMessage(char * messageArray);
+    bool writeFile(char * fileData);
     bool rcvPacket();
     void gremlin(Packet gremPkt);
 }

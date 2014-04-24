@@ -80,15 +80,20 @@ int main(int argc, char* argv[]) {
 				Packet * fileBuffer = new Packet[numPackets];
 				
 				for (int i = 0; i < numPackets; i++){
-					char * pktData= new char[PACKET_DATA_SIZE];
+					char * pktData = new char[PACKET_DATA_SIZE];
 					dataFile.read(pktData, PACKET_DATA_SIZE);
 
+                    if (i == numPackets - 1) { // this is the last packet
+                      std::cout << "Packet #" << i + 1 << " out of " << numPackets << std::endl;
+                      pktData[506] = '\0';
+                    }
+                  
 					Packet filePkt(i%32,  pktData);
 					char * sampleData = new char[48];
 					for (int k = 0; k < 48; k++){
 						sampleData[k] = pktData[k];
 					}
-					std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
+					//std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
 					fileBuffer[i] = filePkt;
 				}
               

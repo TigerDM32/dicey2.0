@@ -76,6 +76,12 @@ bool dicey2::sendMessage(char * messageArray){
 	return 1;
 }
 
+bool dicey2::writeFile(char * fileData) {
+  std::ofstream writeStream ("output.txt", std::ofstream::app);
+  writeStream.write(fileData, strlen(fileData));
+  return 1;
+}
+
 bool dicey2::rcvPacket(){
 	int rcvPoll = 0;
 	struct pollfd ufds;
@@ -97,7 +103,7 @@ bool dicey2::rcvPacket(){
 		int recvLen;
 		recvLen = recvfrom(skt, buffer, PACKET_SIZE, 0, (struct sockaddr *)&srvaddr, &srvaddrLen);
 		if (recvLen > 0){
-			Packet* srvPkt = new Packet;                 
+			Packet * srvPkt = new Packet;                 
 			buffer[recvLen] = 0;
 			memcpy(srvPkt, buffer, PACKET_SIZE);
 			char * pktData = srvPkt->getData();
@@ -106,6 +112,9 @@ bool dicey2::rcvPacket(){
 						sampleData[k] = pktData[k];
 					}
 			std::cout << std::endl << std::endl << "Received Packet: seq_num = " << srvPkt->getSeqNum() << "; ack = " << srvPkt->getAck() << "; checksum = " << srvPkt->getChecksum() << "; data = " << sampleData << "; recvLen = " << recvLen << std::endl;
+          
+            writeFile(pktData);
+              
 			if (recvLen < PACKET_DATA_SIZE)
 				return 1;
 		} 
