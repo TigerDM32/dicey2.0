@@ -19,11 +19,10 @@ bool dicey2::sendPacket(Packet myPkt){
 }
 
 int main(int argc, char* argv[]) {
-	dicey2::client_ip_address = argc > 1 ? argv[1] : "127.0.0.1";//"131.204.14.205";
-    dicey2::prob_corrupt = argc > 2 ? std::atof(argv[2]) : 0.2;
-    dicey2::prob_loss = argc > 3 ? std::atof(argv[3]) : 0.2;
-    dicey2::prob_delay = argc > 4 ? std::atof(argv[4]) : 0.3;
-    dicey2::length_delay = argc > 5 ? std::atof(argv[5]) : 4;
+    dicey2::prob_corrupt = argc > 1 ? std::atof(argv[1]) : 0.2;
+    dicey2::prob_loss = argc > 2 ? std::atof(argv[2]) : 0.2;
+    dicey2::prob_delay = argc > 3 ? std::atof(argv[3]) : 0.3;
+    dicey2::length_delay = argc > 4 ? std::atof(argv[4]) : 4;
 	
 	if((skt = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
 		perror("Unable to create socket.");
@@ -89,16 +88,33 @@ int main(int argc, char* argv[]) {
 					for (int k = 0; k < 48; k++){
 						sampleData[k] = pktData[k];
 					}
-					//std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
+					std::cout << std::endl << std::endl << "Packet: seq_num = " << filePkt.getSeqNum() << "; ack = " << filePkt.getAck() << "; checksum = " << filePkt.getChecksum() << "; data = \"" << sampleData << "\"" << std::endl;
 					fileBuffer[i] = filePkt;
 				}
               
-                for (int i = 0; i < numPackets; i++) {
-                    sendPacket(fileBuffer[i]);
-                    if (i%32 == 16 || i%32 == 0) {
-                        std::cout << "ACK RECEIVED. SENDING NEXT WINDOW." << std::endl;
-                    }
+				//acks we have already received
+				int ackCount = 0;
+				int base = 0;
+
+				while (ackCount < numPackets){
+					
+					//pthread_create()
+					sendPacket(fileBuffer[ackCount]);
+					ackCount++;
+				}
+
+                //send first window
+                for (int i = 0; i < WINDOW_SIZE; i++){
+
                 }
+
+
+                //for (int i = 0; i < numPackets; i++) {
+                  //  sendPacket(fileBuffer[i]);
+                    //if (i%32 == 16 || i%32 == 0) {
+                      //  std::cout << "ACK RECEIVED. SENDING NEXT WINDOW." << std::endl;
+                    //}
+                //}
 			}
             dataFile.close();		
 		}

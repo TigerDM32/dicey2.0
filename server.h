@@ -18,7 +18,6 @@
 #define WINDOW_SIZE 16
 
 namespace dicey2 {
-	std::string client_ip_address;
     double prob_loss;
     double prob_corrupt;
     double prob_delay;
